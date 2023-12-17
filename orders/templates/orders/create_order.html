@@ -70,8 +70,8 @@
                             <textarea class="form-control" id="id_delivery_address"
                                 value="{% if form.delivery_address.value %}{{ form.delivery_address.value }}{% endif %}"
                                 name="delivery_address" rows="2"></textarea>
-                            {% if form.delivery_adress.errors %}
-                                <div class="alert alert-danger alert-dismissible fade show">{{form.delivery_adress.errors}}</div>
+                            {% if form.delivery_address.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.delivery_address.errors}}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-12 mb-3">
@@ -87,6 +87,9 @@
                                     id="id_payment_on_get" value="1">
                                 <label class="form-check-label" for="id_payment_on_get">Наличными/картой
                                     при плучении</label>
+                                {% if form.payment_on_get.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{form.payment_on_get.errors}}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
