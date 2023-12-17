@@ -40,282 +40,36 @@
             <button type="submit" class="btn btn-primary mx-3 mt-3">Применить</button>
         </form>
     </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/set of tea table and three chairs.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="../goods/product.html">
-                    <p class="card-title">Чайный столик и три стула</p>
-                </a>
-                <p class="card-text text-truncate">Комплект из трёх стульев и дизайнерский столик для гостинной комнаты.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn add-to-cart">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
+
+
+
+    {% for product in goods %}
+        <!-- Карта товара -->
+        <div class="col-lg-4 col-md-6 p-4">
+            <div class="card border-primary rounded custom-shadow">
+                <img src="{% static product.image %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <a href="../goods/product.html">
+                        <p class="card-title">{{ product.name }}</p>
                     </a>
+                    <p class="card-text text-truncate">{{ product.description }}</p>
+                    <p class="product_id">id: 02265</p>
+                    <div class="d-flex justify-content-between">
+                        {% comment %} <p><s>100</s> $</p>
+                        <p><strong>90.00 $</strong></p>
+                        <span class="badge bg-warning text-dark">Скидка 10.00 %</span> {% endcomment %}
+                        <p><strong>{{ product.price }} $</strong></p>
+                        <a href="#" class="btn add-to-cart">
+                            <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
+                                width="32" height="32">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/set of tea table and two chairs.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Чайный столик и два стула</p>
-                </a>
-                <p class="card-text text-truncate">Набор из стола и двух стульев в минималистическом стиле.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn add-to-cart">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/double bed.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Двухспальная кровать</p>
-                </a>
-                <p class="card-text text-truncate">Кровать двухспальная с надголовником и вообще очень ортопедичная.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/kitchen table.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Кухонный стол с раковиной</p>
-                </a>
-                <p class="card-text text-truncate">Кухонныйй стол для обеда с встроенной раковиной и стульями.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/kitchen table 2.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Кухонный стол с встройкой</p>
-                </a>
-                <p class="card-text text-truncate">Кухонный стол со встроенной плитой и раковиной. Много полок и вообще красивый.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/corner sofa.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Угловой диван для гостинной</p>
-                </a>
-                <p class="card-text text-truncate">Угловой диван, раскладывается в двухспальную кровать, для гостинной и приема гостей самое то!</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/bedside table.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Прикроватный столик</p>
-                </a>
-                <p class="card-text text-truncate">Прикроватный столик с двумявыдвижными ящиками (цветок не входит в комплект).</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/sofa.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Диван обыкновенный</p>
-                </a>
-                <p class="card-text text-truncate">Диван, он же софа обыкновенная, ничего примечательного для описания.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/office chair.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Стул офисный</p>
-                </a>
-                <p class="card-text text-truncate">Описание товара, про то какой он классный, но это стул, что тут сказать...</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/plants.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Растение</p>
-                </a>
-                <p class="card-text text-truncate">Растение для украшения вашего интерьера подарит свежесть и безмятежность обстановке.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/flower.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Цветок стилизированный</p>
-                </a>
-                <p class="card-text text-truncate">Дизайнерский цветок (возможно искусственный) для украшения интерьера.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Карта товара -->
-    <div class="col-lg-4 col-md-6 p-4">
-        <div class="card border-primary rounded custom-shadow">
-            <img src="../deps/images/goods/strange table.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <a href="#">
-                    <p class="card-title">Прикроватный столик</p>
-                </a>
-                <p class="card-text text-truncate">Столик, довольно странный на вид, но подходит для размещения рядом с кроватью.</p>
-                <p class="product_id">id: 02265</p>
-                <div class="d-flex justify-content-between">
-                    <p><s>100</s> $</p>
-                    <p><strong>90.00 $</strong></p>
-                    <span class="badge bg-warning text-dark">Скидка 10.00 %</span>
-                    <!-- <p><strong>100.00 $</strong></p> -->
-                    <a href="#" class="btn">
-                        <img class="mx-1" src="../deps/icons/cart-plus.svg" alt="Catalog Icon"
-                            width="32" height="32">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
+
+
 
 </div>
 <!-- Пагинация -->
