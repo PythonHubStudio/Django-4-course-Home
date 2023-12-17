@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load goods_tags %}
 
 {% block content %}
 <div class="row">
@@ -10,29 +11,32 @@
             Фильтры
         </button>
 
-        <form action="" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+        <form action="{% url "catalog:index" slug_url %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
             <div class="form-check text-white mx-3">
-                <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on">
-                <input type="hidden" name="q" value="request.GET.q">
+                <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == 'on' %}checked{% endif %}>
+                {% comment %} <input type="hidden" name="q" value="request.GET.q"> {% endcomment %}
                 <label class="form-check-label" for="flexCheckDefault">
                     Товары по акции
                 </label>
             </div>
             <p class="text-white mx-3 mt-3">Сортировать:</p>
             <div class="form-check text-white mx-3">
-                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" checked>
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default"
+                {% if not request.GET.order_by or request.GET.order_by == 'default' %}checked{% endif %}>
                 <label class="form-check-label" for="flexRadioDefault1">
                     По умолчанию
                 </label>
             </div>
             <div class="form-check text-white mx-3">
-                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price">
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price" 
+                {% if request.GET.order_by == 'price' %}checked{% endif %}>
                 <label class="form-check-label" for="flexRadioDefault2">
                     От дешевых к дорогим
                 </label>
             </div>
             <div class="form-check text-white mx-3">
-                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price">
+                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price"
+                {% if request.GET.order_by == '-price' %}checked{% endif %}>
                 <label class="form-check-label" for="flexRadioDefault3">
                     От дорогих к дешевым
                 </label>
@@ -87,24 +91,20 @@
         <div class="custom-shadow d-flex">
 
             <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
-              <a class="page-link" href="{% if goods.has_previous %}?page={{goods.previous_page_number}}{% else %}
-              #
-              {% endif %}">Назад</a>
+              <a class="page-link" href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}{% else %}#{% endif %}">Назад</a>
             </li>
 
             {% for page in goods.paginator.page_range %}
             {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
                 <li class="page-item {% if goods.number == page %} active {% endif %}">
-                    <a class="page-link" href="?page={{page}}">{{ page }}</a>
+                    <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
                 </li>
             {% endif %}
             {% endfor %}
 
 
             <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
-                <a class="page-link" href="{% if goods.has_next %}?page={{goods.next_page_number}}{% else %}
-                #
-                {% endif %}">Следующая</a>
+                <a class="page-link" href="{% if goods.has_next %}?{% change_params page=goods.next_page_number %}{% else %}#{% endif %}">Следующая</a>
               </li>
         </div>
     </ul>
