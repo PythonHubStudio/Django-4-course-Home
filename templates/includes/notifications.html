@@ -1,0 +1,14 @@
+{% load static %}
+
+{% if form.non_field_errors %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="alert alert-danger alert-dismissible fade show custom-shadow" role="alert">
+                    {{form.non_field_errors}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
