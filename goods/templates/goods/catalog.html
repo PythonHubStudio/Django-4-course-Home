@@ -47,8 +47,13 @@
         </form>
     </div>
 
-
-
+    {% if request.GET.q %}
+    <h3 class="mt-4">Результаты поиска по запросу {{ request.GET.q }}</h3>
+    {% if not goods %}
+        <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+        <h2 class="mt-4">По запросу ничего не найдено</h2>
+    {% endif %}
+    {% endif %}
     {% for product in goods %}
         <!-- Карта товара -->
         <div class="col-lg-4 col-md-6 p-4">
@@ -60,9 +65,25 @@
                 {% endif %}
                 <div class="card-body">
                     <a href="{% url "catalog:product" product.slug %}">
-                        <p class="card-title">{{ product.name }}</p>
+                        <p class="card-title">
+                            {% autoescape off %}
+                                {% if product.headline %}
+                                {{product.headline}}
+                                {% else %}
+                                {{ product.name }}
+                                {% endif %}
+                            {% endautoescape %}
+                        </p>
                     </a>
-                    <p class="card-text">{{ product.description|truncatechars:35 }}</p>
+                    <p class="card-text">
+                        {% autoescape off %}
+                            {% if product.bodyline %}
+                            {{product.bodyline|truncatechars:100}}
+                            {% else %}
+                            {{ product.description|truncatechars:35 }}
+                            {% endif %}
+                        {% endautoescape %}
+                    </p>
                     <p class="product_id">id: {{ product.display_id }}</p>
                     <div class="d-flex justify-content-between">
 
@@ -88,29 +109,31 @@
 
 </div>
 <!-- Пагинация -->
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center my-4">
-        <div class="custom-shadow d-flex">
+{% if goods %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center my-4">
+            <div class="custom-shadow d-flex">
 
-            <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
-              <a class="page-link" href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}{% else %}#{% endif %}">Назад</a>
-            </li>
-
-            {% for page in goods.paginator.page_range %}
-            {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
-                <li class="page-item {% if goods.number == page %} active {% endif %}">
-                    <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
+                <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}{% else %}#{% endif %}">Назад</a>
                 </li>
-            {% endif %}
-            {% endfor %}
+
+                {% for page in goods.paginator.page_range %}
+                {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+                    <li class="page-item {% if goods.number == page %} active {% endif %}">
+                        <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
+                    </li>
+                {% endif %}
+                {% endfor %}
 
 
-            <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
-                <a class="page-link" href="{% if goods.has_next %}?{% change_params page=goods.next_page_number %}{% else %}#{% endif %}">Следующая</a>
-              </li>
-        </div>
-    </ul>
-</nav>
+                <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if goods.has_next %}?{% change_params page=goods.next_page_number %}{% else %}#{% endif %}">Следующая</a>
+                </li>
+            </div>
+        </ul>
+    </nav>
+{% endif %}
 {% endblock  %}
 
 
