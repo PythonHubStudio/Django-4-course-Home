@@ -12,3 +12,27 @@
         </div>
     </div>
 {% endif %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                    <div id="notification" class="position-fixed start-50 translate-middle-x z-3 alert alert-success fade show custom-shadow" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    {% if message.tags == 'warning' %}
+                    <div id="notification" class="position-fixed start-50 translate-middle-x z-3 alert alert-danger fade show custom-shadow" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+            <div id="jq-notification" class="position-fixed start-50 translate-middle-x z-3 alert alert-success fade show custom-shadow" style="display: none;" role="alert">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
