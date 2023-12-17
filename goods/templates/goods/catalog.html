@@ -2,6 +2,11 @@
 {% load static %}
 {% load goods_tags %}
 
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+
 {% block content %}
 <div class="row">
     <!-- Форма фильтров -->
@@ -95,7 +100,7 @@
                             <p><strong>{{ product.price }} $</strong></p>
                         {% endif %}
 
-                        <a href="#" class="btn add-to-cart">
+                        <a href="{% url "cart:cart_add" product.slug %}" class="btn add-to-cart">
                             <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
                                 width="32" height="32">
                         </a>
