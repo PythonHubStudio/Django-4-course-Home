@@ -7,9 +7,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6 bg-white p-4 mb-4 mx-3 rounded custom-shadow">
                 <h2 class="text-center mb-4">Авторизация</h2>
-                <form action="{% url "user:login" %}" method="post">
+                <form  action="{% url "user:login" %}" method="post">
                     {% csrf_token %}
-
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value={{request.GET.next}}>
+                    {% endif %}
                     <div class="mb-3">
                         <label for="id_username" class="form-label">Имя пользователя</label>
                         <input type="text" class="form-control"
