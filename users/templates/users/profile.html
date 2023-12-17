@@ -90,11 +90,6 @@
                         {% include "carts/includes/included_cart.html" %}
                         <!-- Закончилась разметка корзины -->
                     </div>
-                {% if carts %}
-                    <a class="btn btn-dark" href="../orders/create_order.html">
-                        Оформить заказ
-                    </a>
-                {% endif %}
                 </div>
             </div>
             <!-- Оформленные заказы -->
@@ -103,6 +98,44 @@
                     <h3 class="text-center mb-4">Мои заказы</h3>
                     <!-- Разметка заказов -->
                     <div class="container">
+                        <div class="accordion" id="accordionExample">
+                            {% for order in orders %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ order.id }}">
+                                    <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+                                        Заказ № {{ order.id }} - {{ order.created_timestamp }} | Статус: <strong class="mx-2">{{order.requires_delivery}}</strong>
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <table class="table table-dark table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Товар</th>
+                                                    <th>Количество</th>
+                                                    <th>Цена</th>
+                                                    <th>Общая стоимость</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in order.orderitem_set.all %}
+                                                <tr>
+                                                    <td><a class="text-white" href="{% url 'goods:product' item.product.slug %}">{{ item.product.name }}</a></td>
+                                                    <td>{{ item.quantity }}</td>
+                                                    <td>{{ item.price }}</td>
+                                                    <td>{{ item.products_price }}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% comment %} <div class="container">
                         <div class="accordion" id="accordionExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading1">
@@ -170,7 +203,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                     <!-- Закончилась разметка заказов -->
                 </div>
             </div>
