@@ -27,6 +27,7 @@ class Cart(models.Model):
         db_table = 'cart'
         verbose_name = "Корзина"
         verbose_name_plural = "Корзина"
+        ordering = ("id",)
 
     objects = CartQueryset().as_manager()
 

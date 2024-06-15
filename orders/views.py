@@ -58,7 +58,7 @@ def create_order(request):
                         return redirect('user:profile')
             except ValidationError as e:
                 messages.success(request, str(e))
-                return redirect('cart:order')
+                return redirect('orders:create_order')
     else:
         initial = {
             'first_name': request.user.first_name,
@@ -70,6 +70,6 @@ def create_order(request):
     context = {
         'title': 'Home - Оформление заказа',
         'form': form,
-        'orders': True,
+        'order': True,
     }
     return render(request, 'orders/create_order.html', context=context)

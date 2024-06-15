@@ -1,0 +1,282 @@
+diff --git a/carts/admin.py b/carts/admin.py
+index aa9ac32..45b6188 100644
+--- a/carts/admin.py
++++ b/carts/admin.py
+@@ -24,6 +24,9 @@ class CartAdmin(admin.ModelAdmin):
+     def product_display(self, obj):
+         return str(obj.product.name)
+ 
++    # user_display and product_display alter name of columns in admin panel
++    user_display.short_description = "Пользователь"
++    product_display.short_description = "Товар"
+ 
+ 
+ 
+diff --git a/carts/models.py b/carts/models.py
+index 5257009..6591a4b 100644
+--- a/carts/models.py
++++ b/carts/models.py
+@@ -27,6 +27,7 @@ class Cart(models.Model):
+         db_table = 'cart'
+         verbose_name = "Корзина"
+         verbose_name_plural = "Корзина"
++        ordering = ("id",)
+ 
+     objects = CartQueryset().as_manager()
+ 
+diff --git a/carts/templates/carts/includes/included_cart.html b/carts/templates/carts/includes/included_cart.html
+index fd6051d..a1d7295 100644
+--- a/carts/templates/carts/includes/included_cart.html
++++ b/carts/templates/carts/includes/included_cart.html
+@@ -51,7 +51,7 @@
+         <h4 class="float-left"><strong>{{ carts.total_price }} $</strong></h4>
+     </div>
+ </div>
+-{% if carts and not orders%}
++{% if carts and not order%}
+ <a class="btn btn-dark" href="{% url "orders:create_order" %}">
+     Оформить заказ
+ </a>
+diff --git a/carts/views.py b/carts/views.py
+index 219c94d..67b870d 100644
+--- a/carts/views.py
++++ b/carts/views.py
+@@ -1,6 +1,6 @@
+ from django.http import JsonResponse
+-from django.shortcuts import redirect, render
+ from django.template.loader import render_to_string
++from django.urls import reverse
+ from carts.models import Cart
+ from carts.utils import get_user_carts
+ 
+@@ -59,14 +59,22 @@ def cart_change(request):
+     cart.save()
+     updated_quantity = cart.quantity
+ 
+-    cart = get_user_carts(request)
++    user_cart = get_user_carts(request)
++
++    context = {"carts": user_cart}
++
++    # if referer page is create_order add key orders: True to context
++    referer = request.META.get('HTTP_REFERER')
++    if reverse('orders:create_order') in referer:
++        context["orders"] = True
++
+     cart_items_html = render_to_string(
+-        "carts/includes/included_cart.html", {"carts": cart}, request=request)
++        "carts/includes/included_cart.html", context, request=request)
+ 
+     response_data = {
+         "message": "Количество изменено",
+         "cart_items_html": cart_items_html,
+-        "quaantity": updated_quantity,
++        "quantity": updated_quantity,
+     }
+ 
+     return JsonResponse(response_data)
+@@ -82,8 +90,16 @@ def cart_remove(request):
+     cart.delete()
+ 
+     user_cart = get_user_carts(request)
++
++    context = {"carts": user_cart}
++
++    # if referer page is create_order add key orders: True to context
++    referer = request.META.get('HTTP_REFERER')
++    if reverse('orders:create_order') in referer:
++        context["orders"] = True
++
+     cart_items_html = render_to_string(
+-        "carts/includes/included_cart.html", {"carts": user_cart}, request=request)
++        "carts/includes/included_cart.html", context, request=request)
+ 
+     response_data = {
+         "message": "Товар удален",
+diff --git a/goods/models.py b/goods/models.py
+index 32fd3b6..debb0ce 100644
+--- a/goods/models.py
++++ b/goods/models.py
+@@ -10,6 +10,7 @@ class Categories(models.Model):
+         db_table = 'category'
+         verbose_name = 'Категорию'
+         verbose_name_plural = 'Категории'
++        ordering = ("id",)
+ 
+     def __str__(self):
+         return self.name
+diff --git a/goods/views.py b/goods/views.py
+index e078611..8a3e0a7 100644
+--- a/goods/views.py
++++ b/goods/views.py
+@@ -1,5 +1,6 @@
+ from django.core.paginator import Paginator
+-from django.shortcuts import get_list_or_404, get_object_or_404, render
++from django.http import Http404
++from django.shortcuts import render
+ 
+ from goods.models import Products
+ from goods.utils import q_search
+@@ -17,7 +18,9 @@ def catalog(request, category_slug=None):
+     elif query:
+         goods = q_search(query)
+     else:
+-        goods = get_list_or_404(Products.objects.filter(category__slug=category_slug))
++        goods = Products.objects.filter(category__slug=category_slug)
++        if not goods.exists():
++            raise Http404()
+ 
+     if on_sale:
+         goods = goods.filter(discount__gt=0)
+@@ -41,4 +44,4 @@ def product(request, product_slug):
+ 
+     context = {"product": product}
+ 
+-    return render(request, "goods/product.html", context=context)
++    return render(request, "goods/product.html", context)
+diff --git a/orders/models.py b/orders/models.py
+index ed10c32..ad356fa 100644
+--- a/orders/models.py
++++ b/orders/models.py
+@@ -28,6 +28,7 @@ class Order(models.Model):
+         db_table = "order"
+         verbose_name = "Заказ"
+         verbose_name_plural = "Заказы"
++        ordering = ("id",)
+ 
+     def __str__(self):
+         return f"Заказ № {self.pk} | Покупатель {self.user.first_name} {self.user.last_name}"
+@@ -46,6 +47,7 @@ class OrderItem(models.Model):
+         db_table = "order_item"
+         verbose_name = "Проданный товар"
+         verbose_name_plural = "Проданные товары"
++        ordering = ("id",)
+ 
+     objects = OrderitemQueryset.as_manager()
+ 
+diff --git a/orders/templates/orders/create_order.html b/orders/templates/orders/create_order.html
+index 7a91d91..7cf140b 100644
+--- a/orders/templates/orders/create_order.html
++++ b/orders/templates/orders/create_order.html
+@@ -19,7 +19,7 @@
+         <h3 class="text-center">Детали заказа</h3>
+         <div class="card mb-3">
+             <div class="card-body">
+-                <form action="{% url "orders:create_order" %}" method="post">
++                <form action="{% url "orders:create_order" %}" method="post" id="create_order_form">
+                     {% csrf_token %}
+                     <div class="row">
+                         <div class="col-md-6 mb-3">
+@@ -44,11 +44,12 @@
+                             <label for="id_phone_number" class="form-label">Номер телефона*:</label>
+                             <input type="text" class="form-control" id="id_phone_number" name="phone_number"
+                                 value="{% if form.phone_number.value %}{{ form.phone_number.value }}{% endif %}"
+-                                placeholder="В формате: XXX-XXX-XX-XX"
++                                placeholder="(000) 000-0000"
+                                 required>
+                             {% if form.phone_number.errors %}
+                                 <div class="alert alert-danger alert-dismissible fade show">{{form.phone_number.errors}}</div>
+                             {% endif %}
++                            <div class="alert alert-danger alert-dismissible fade show" style="display: none" id="phone_number_error">Неверный формат номера</div>
+                         </div>
+                         <div class="col-md-12 mb-3">
+                             <label for="delivery" class="form-label">Способ доставки: </label>
+diff --git a/orders/views.py b/orders/views.py
+index 24e0188..332361c 100644
+--- a/orders/views.py
++++ b/orders/views.py
+@@ -58,7 +58,7 @@ def create_order(request):
+                         return redirect('user:profile')
+             except ValidationError as e:
+                 messages.success(request, str(e))
+-                return redirect('cart:order')
++                return redirect('orders:create_order')
+     else:
+         initial = {
+             'first_name': request.user.first_name,
+@@ -70,6 +70,6 @@ def create_order(request):
+     context = {
+         'title': 'Home - Оформление заказа',
+         'form': form,
+-        'orders': True,
++        'order': True,
+     }
+     return render(request, 'orders/create_order.html', context=context)
+diff --git a/static/deps/js/jquery-ajax.js b/static/deps/js/jquery-ajax.js
+index 5aa6d03..636bc72 100644
+--- a/static/deps/js/jquery-ajax.js
++++ b/static/deps/js/jquery-ajax.js
+@@ -154,12 +154,12 @@ $(document).ready(function () {
+             },
+ 
+             success: function (data) {
+-                 // Сообщение
++                // Сообщение
+                 successMessage.html(data.message);
+                 successMessage.fadeIn(400);
+-                 // Через 7сек убираем сообщение
++                // Через 7сек убираем сообщение
+                 setTimeout(function () {
+-                     successMessage.fadeOut(400);
++                    successMessage.fadeOut(400);
+                 }, 7000);
+ 
+                 // Изменяем количество товаров в корзине
+@@ -210,4 +210,27 @@ $(document).ready(function () {
+             $("#deliveryAddressField").hide();
+         }
+     });
++
++    // Форматирования ввода номера телефона в форме (xxx) xxx-хххx
++    document.getElementById('id_phone_number').addEventListener('input', function (e) {
++        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
++        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
++    });
++
++    // Проверяем на стороне клинта коррекность номера телефона в форме xxx-xxx-хх-хx
++    $('#create_order_form').on('submit', function (event) {
++        var phoneNumber = $('#id_phone_number').val();
++        var regex = /^\(\d{3}\) \d{3}-\d{4}$/;
++
++        if (!regex.test(phoneNumber)) {
++            $('#phone_number_error').show();
++            event.preventDefault();
++        } else {
++            $('#phone_number_error').hide();
++
++            // Очистка номера телефона от скобок и тире перед отправкой формы
++            var cleanedPhoneNumber = phoneNumber.replace(/[()\-\s]/g, '');
++            $('#id_phone_number').val(cleanedPhoneNumber);
++        }
++    });
+ });
+\ No newline at end of file
+diff --git a/users/templates/users/profile.html b/users/templates/users/profile.html
+index 97b8f78..740a128 100644
+--- a/users/templates/users/profile.html
++++ b/users/templates/users/profile.html
+@@ -103,7 +103,7 @@
+                             <div class="accordion-item">
+                                 <h2 class="accordion-header" id="heading{{ order.id }}">
+                                     <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+-                                        Заказ № {{ order.id }} - {{ order.created_timestamp }} | Статус: <strong class="mx-2">{{order.requires_delivery}}</strong>
++                                        Заказ № {{ order.id }} - {{ order.created_timestamp }} | Статус: <strong class="mx-2">{{order.status}}</strong>
+                                     </button>
+                                 </h2>
+                                 <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
+diff --git a/users/views.py b/users/views.py
+index d4a004a..0c89a09 100644
+--- a/users/views.py
++++ b/users/views.py
+@@ -25,6 +25,11 @@ def login(request):
+                 messages.success(request, f"{username}, Вы вошли в аккаунт")
+ 
+                 if session_key:
++                    # delete old authorized user carts
++                    forgot_carts = Cart.objects.filter(user=user)
++                    if forgot_carts.exists():
++                        forgot_carts.delete()
++                    # add new authorized user carts from anonimous session
+                     Cart.objects.filter(session_key=session_key).update(user=user)
+ 
+                 redirect_page = request.POST.get('next', None)
