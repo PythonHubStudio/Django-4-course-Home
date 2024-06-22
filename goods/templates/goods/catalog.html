@@ -121,21 +121,21 @@
         <ul class="pagination justify-content-center my-4">
             <div class="custom-shadow d-flex">
 
-                <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
-                <a class="page-link" href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}{% else %}#{% endif %}">Назад</a>
+                <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}{% else %}#{% endif %}">Назад</a>
                 </li>
 
-                {% for page in goods.paginator.page_range %}
-                {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
-                    <li class="page-item {% if goods.number == page %} active {% endif %}">
+                {% for page in page_obj.paginator.page_range %}
+                {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+                    <li class="page-item {% if page_obj.number == page %} active {% endif %}">
                         <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
                     </li>
                 {% endif %}
                 {% endfor %}
 
 
-                <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
-                    <a class="page-link" href="{% if goods.has_next %}?{% change_params page=goods.next_page_number %}{% else %}#{% endif %}">Следующая</a>
+                <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}{% else %}#{% endif %}">Следующая</a>
                 </li>
             </div>
         </ul>
@@ -147,7 +147,7 @@
 {% block footer %}
 <footer class="py-4 bg-dark">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023</p>
+        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023 - 2024</p>
     </div>
 </footer>
 {% endblock  %}
