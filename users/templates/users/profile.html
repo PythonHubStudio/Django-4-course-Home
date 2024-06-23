@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load cache %}
 {% load carts_tags %}
 
 {% block content %}
@@ -93,6 +94,7 @@
                 </div>
             </div>
             <!-- Оформленные заказы -->
+            {% comment %} {% cache 60 user_orders user.id %} {% endcomment %}
             <div class="col-md-12">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                     <h3 class="text-center mb-4">Мои заказы</h3>
@@ -135,78 +137,11 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {% comment %} <div class="container">
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading1">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                                        Заказ № 256 - 09 сентября 2023 9:04 | Статус:<strong class="mx-2"> В обработке</strong>
-                                    </button>
-                                </h2>
-                                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <table class="table table-dark table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Товар</th>
-                                                    <th>Количество</th>
-                                                    <th>Цена</th>
-                                                    <th>Общая стоимость</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><a class="text-white" href="#">Комплект стол и три стула</a></td>
-                                                    <td>1</td>
-                                                    <td>255.00 $</td>
-                                                    <td>255.00 $</td>
-                                                    
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-between">
-                                            <p><strong>Итого:</strong></p>
-                                            <p><strong>255.00 $</strong></p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading2">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                        Заказ № 248 - 01 августа 2023 11:28 | Статус: <strong>Получен</strong>
-                                    </button>
-                                </h2>
-                                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <table class="table table-dark table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Товар</th>
-                                                    <th>Количество</th>
-                                                    <th>Цена</th>
-                                                    <th>Общая стоимость</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><a class="text-white" href="#">Стул офисный</a></td>
-                                                    <td>2</td>
-                                                    <td>30.00 $</td>
-                                                    <td>60.00 $</td>
-                                                    
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> {% endcomment %}
                     <!-- Закончилась разметка заказов -->
                 </div>
             </div>
+            {% comment %} {% endcache %} {% endcomment %}
         </div>
     </div>
 </div>
